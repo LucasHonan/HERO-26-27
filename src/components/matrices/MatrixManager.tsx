@@ -1,5 +1,6 @@
 import { Copy, Edit3, Eye, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { calculateOptionTotal } from "../../lib/scoring";
 import { DecisionMatrix } from "../../types";
 import { SectionHeader } from "../layout/SectionHeader";
 import { MatrixEditor } from "./MatrixEditor";
@@ -81,6 +82,11 @@ export function MatrixManager({
 }
 
 function MatrixReadOnly({ matrix }: { matrix: DecisionMatrix }) {
+  const weightedTotal = (optionId: string) => {
+    const option = matrix.options.find((item) => item.id === optionId);
+    return option ? (calculateOptionTotal(matrix, option) * 20).toFixed(1) : "-";
+  };
+
   return (
     <div className="space-y-5">
       <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -113,6 +119,7 @@ function MatrixReadOnly({ matrix }: { matrix: DecisionMatrix }) {
                 <th className="px-3 py-2">Option</th>
                 <th className="px-3 py-2">Notes</th>
                 {matrix.criteria.map((criterion) => <th key={criterion.id} className="px-3 py-2">{criterion.name}</th>)}
+                <th className="px-3 py-2">Weighted Total /100</th>
               </tr>
             </thead>
             <tbody>
@@ -123,6 +130,7 @@ function MatrixReadOnly({ matrix }: { matrix: DecisionMatrix }) {
                   {matrix.criteria.map((criterion) => (
                     <td key={criterion.id} className="px-3 py-3 font-semibold text-slate-700">{option.scores[criterion.id] ?? "-"}</td>
                   ))}
+                  <td className="px-3 py-3 text-base font-bold text-slate-950">{weightedTotal(option.id)}</td>
                 </tr>
               ))}
             </tbody>

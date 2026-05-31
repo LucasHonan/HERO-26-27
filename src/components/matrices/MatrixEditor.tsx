@@ -1,6 +1,6 @@
 import { Plus, Trash2 } from "lucide-react";
 import { DecisionMatrix } from "../../types";
-import { clampScore } from "../../lib/scoring";
+import { calculateOptionTotal, clampScore } from "../../lib/scoring";
 import { Field } from "../ui/Field";
 
 export function MatrixEditor({ matrix, onChange }: { matrix: DecisionMatrix; onChange: (matrix: DecisionMatrix) => void }) {
@@ -86,6 +86,7 @@ export function MatrixEditor({ matrix, onChange }: { matrix: DecisionMatrix; onC
                 <th className="px-3 py-2">Option</th>
                 <th className="px-3 py-2">Notes</th>
                 {matrix.criteria.map((criterion) => <th key={criterion.id} className="px-3 py-2">{criterion.name}</th>)}
+                <th className="px-3 py-2">Weighted Total /100</th>
                 <th className="px-3 py-2"></th>
               </tr>
             </thead>
@@ -106,6 +107,7 @@ export function MatrixEditor({ matrix, onChange }: { matrix: DecisionMatrix; onC
                       />
                     </td>
                   ))}
+                  <td className="px-3 py-3 text-base font-bold text-slate-950">{(calculateOptionTotal(matrix, option) * 20).toFixed(1)}</td>
                   <td className="px-3 py-3">
                     <button className="rounded-2xl p-2 text-rose-500 hover:bg-rose-50" onClick={() => update({ options: matrix.options.filter((item) => item.id !== option.id) })} aria-label="Remove option"><Trash2 size={17} /></button>
                   </td>
