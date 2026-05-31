@@ -1,22 +1,25 @@
 # HERO-26-27
 
-## HERO Rover Research & Decision Tracker
+Campbell University HERO rover repository for the NASA HERC 2026-2027 season.
 
-React + Vite + TypeScript app for the Campbell University HERO team to track NASA HERC 2026 rover research, engineering decisions, weighted decision matrices, requirements, test evidence, risks, traceability, and DRR/CDR export material.
+## Repository Layout
 
-## Run locally
+This `main` branch is reserved for rover implementation work: embedded code, controls software, telemetry tools, hardware notes, test procedures, and competition documentation.
 
-```bash
-npm install
-npm run dev
+```text
+docs/
+embedded/
+hardware/
+telemetry/
+tests/
 ```
 
-## Build
+## Tracker App
 
-```bash
-npm run build
+The HERO Rover Research & Decision Tracker React app has been moved off `main` and lives on the dedicated branch:
+
+```text
+hero-tracker-app
 ```
 
-## Current storage
-
-The app uses versioned `localStorage` persistence with backup JSON import/export and manual snapshots. There is no backend, Supabase, authentication, or paid API dependency yet.
+GitHub Pages deployment for the tracker app is configured from that app branch.
