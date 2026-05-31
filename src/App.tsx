@@ -117,15 +117,24 @@ function App() {
 
   const matrixChange = (matrix: DecisionMatrix) => updateData((current) => ({ ...current, matrices: current.matrices.map((item) => item.id === matrix.id ? matrix : item) }));
 
+  const traceabilityData = useMemo<AppData>(() => ({
+    ...data,
+    research: filtered.research,
+    decisions: filtered.decisions,
+    requirements: filtered.requirements,
+    tests: filtered.tests,
+    risks: filtered.risks,
+    matrices: filtered.matrices,
+  }), [data, filtered]);
+
   const renderPage = () => {
-    if (hasSearchOrFilters) return <SearchResults filtered={filtered} />;
     switch (page) {
       case "research":
         return <ResearchLibrary research={filtered.research} editing={editing?.entity === "research" ? editing.item as ResearchEntry : null} errors={errors} onNew={() => setEditing({ entity: "research", item: newResearch() })} onEdit={(item) => setEditing({ entity: "research", item: structuredClone(item) })} onChange={(item) => setEditing({ entity: "research", item })} onSave={saveEntity} onCancel={() => setEditing(null)} onDelete={(item) => deleteEntity("research", item)} />;
       case "decisions":
         return <DecisionLog decisions={filtered.decisions} editing={editing?.entity === "decisions" ? editing.item as Decision : null} errors={errors} onNew={() => setEditing({ entity: "decisions", item: newDecision() })} onEdit={(item) => setEditing({ entity: "decisions", item: structuredClone(item) })} onChange={(item) => setEditing({ entity: "decisions", item })} onSave={saveEntity} onCancel={() => setEditing(null)} onDelete={(item) => deleteEntity("decisions", item)} />;
       case "matrices":
-        return <MatrixManager matrices={filtered.matrices.length ? filtered.matrices : data.matrices} activeId={activeMatrixId} onActiveChange={setActiveMatrixId} onChange={matrixChange} onNew={() => { const matrix = newMatrix(); updateData((current) => ({ ...current, matrices: [matrix, ...current.matrices] })); setActiveMatrixId(matrix.id); }} onDuplicate={(matrix) => { const copy = { ...structuredClone(matrix), id: id("matrix"), title: `${matrix.title} Copy`, createdAt: now(), updatedAt: now() }; updateData((current) => ({ ...current, matrices: [copy, ...current.matrices] })); setActiveMatrixId(copy.id); }} onDelete={(matrix) => setConfirm({ title: `Delete ${matrix.title}?`, message: "This will remove the matrix and its option scores.", onConfirm: () => { updateData((current) => ({ ...current, matrices: current.matrices.filter((item) => item.id !== matrix.id) })); setActiveMatrixId(data.matrices.find((item) => item.id !== matrix.id)?.id ?? ""); setConfirm(null); } })} />;
+        return <MatrixManager matrices={filtered.matrices} activeId={activeMatrixId} onActiveChange={setActiveMatrixId} onChange={matrixChange} onNew={() => { const matrix = newMatrix(); updateData((current) => ({ ...current, matrices: [matrix, ...current.matrices] })); setActiveMatrixId(matrix.id); }} onDuplicate={(matrix) => { const copy = { ...structuredClone(matrix), id: id("matrix"), title: `${matrix.title} Copy`, createdAt: now(), updatedAt: now() }; updateData((current) => ({ ...current, matrices: [copy, ...current.matrices] })); setActiveMatrixId(copy.id); }} onDelete={(matrix) => setConfirm({ title: `Delete ${matrix.title}?`, message: "This will remove the matrix and its option scores.", onConfirm: () => { updateData((current) => ({ ...current, matrices: current.matrices.filter((item) => item.id !== matrix.id) })); setActiveMatrixId(data.matrices.find((item) => item.id !== matrix.id)?.id ?? ""); setConfirm(null); } })} />;
       case "requirements":
         return <RequirementsTracker requirements={filtered.requirements} editing={editing?.entity === "requirements" ? editing.item as Requirement : null} errors={errors} onNew={() => setEditing({ entity: "requirements", item: newRequirement() })} onEdit={(item) => setEditing({ entity: "requirements", item: structuredClone(item) })} onChange={(item) => setEditing({ entity: "requirements", item })} onSave={saveEntity} onCancel={() => setEditing(null)} onDelete={(item) => deleteEntity("requirements", item)} />;
       case "tests":
@@ -133,10 +142,11 @@ function App() {
       case "risks":
         return <RiskRegister risks={filtered.risks} editing={editing?.entity === "risks" ? editing.item as Risk : null} errors={errors} onNew={() => setEditing({ entity: "risks", item: newRisk() })} onEdit={(item) => setEditing({ entity: "risks", item: structuredClone(item) })} onChange={(item) => setEditing({ entity: "risks", item })} onSave={saveEntity} onCancel={() => setEditing(null)} onDelete={(item) => deleteEntity("risks", item)} />;
       case "traceability":
-        return <TraceabilityPage data={data} />;
+        return <TraceabilityPage data={traceabilityData} />;
       case "export":
         return <DRRExportView data={data} onSnapshot={() => updateData(createSnapshot)} importError={importError} onImport={(text) => { const result = importBackupJson(text); if (result.error) setImportError(result.error); if (result.data) { setData(result.data); setImportError(""); } }} />;
       default:
+        if (hasSearchOrFilters) return <SearchResults filtered={filtered} />;
         return <Dashboard data={data} />;
     }
   };
@@ -150,7 +160,7 @@ function App() {
             <div className="grid gap-3 xl:grid-cols-[1fr_repeat(6,150px)_auto]">
               <label className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input className="h-full min-h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search across research, decisions, requirements, tests, risks, and matrices" />
+                <input className="h-full min-h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={page === "dashboard" ? "Search across research, decisions, requirements, tests, risks, and matrices" : "Search this tab"} />
               </label>
               <Field label="Subsystem" as="select" options={options.subsystem} value={filters.subsystem} onChange={(value) => setFilters({ ...filters, subsystem: value })} />
               <Field label="Category" as="select" options={options.category} value={filters.category} onChange={(value) => setFilters({ ...filters, category: value })} />
