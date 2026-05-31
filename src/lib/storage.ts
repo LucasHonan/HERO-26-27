@@ -2,17 +2,19 @@ import { seedData } from "../data/seedData";
 import { AppData, SavedSnapshot } from "../types";
 import { isAppData, validateAppData } from "./validation";
 
-const STORAGE_KEY = "hero-rover-tracker:v3";
+const STORAGE_KEY = "hero-rover-tracker:v4";
 const LEGACY_STORAGE_KEY = "hero-rover-tracker";
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 const stamp = () => new Date().toISOString();
 const sampleResearchIds = new Set(["research-pixhawk-6c-mini", "research-spark-max-can", "research-ros2-autonomy"]);
+const sampleDecisionIds = new Set(["decision-controller-architecture", "decision-motor-control"]);
 
 const withSchema = (data: AppData): AppData => ({
   ...seedData,
   ...data,
   research: data.research.length === sampleResearchIds.size && data.research.every((entry) => sampleResearchIds.has(entry.id)) ? seedData.research : data.research,
+  decisions: data.decisions.length === sampleDecisionIds.size && data.decisions.every((entry) => sampleDecisionIds.has(entry.id)) ? seedData.decisions : data.decisions,
   schemaVersion: SCHEMA_VERSION,
   snapshots: data.snapshots ?? [],
 });
