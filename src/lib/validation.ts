@@ -38,7 +38,7 @@ export const validateAppData = (value: unknown): ValidationResult => {
 
 export const validateRequired = (fields: Record<string, string | undefined>) =>
   Object.entries(fields)
-    .filter(([, value]) => !value.trim())
+    .filter(([, value]) => !value?.trim())
     .map(([key]) => `${key} is required.`);
 
 export const normalizeMatrixScores = (matrix: DecisionMatrix): DecisionMatrix => ({
