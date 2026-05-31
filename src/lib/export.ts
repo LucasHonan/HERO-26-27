@@ -3,7 +3,7 @@ import { rankMatrixOptions, topMatrices } from "./scoring";
 
 const escapeCsv = (value: unknown) => {
   const text = Array.isArray(value) ? value.join("; ") : String(value ?? "");
-  return `"${text.replaceAll('"', '""')}"`;
+  return `"${text.replace(/"/g, '""')}"`;
 };
 
 export const toCsv = (rows: Record<string, unknown>[]) => {

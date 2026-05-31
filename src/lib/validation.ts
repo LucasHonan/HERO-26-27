@@ -36,7 +36,7 @@ export const validateAppData = (value: unknown): ValidationResult => {
   return { valid: errors.length === 0, errors };
 };
 
-export const validateRequired = (fields: Record<string, string>) =>
+export const validateRequired = (fields: Record<string, string | undefined>) =>
   Object.entries(fields)
     .filter(([, value]) => !value.trim())
     .map(([key]) => `${key} is required.`);
