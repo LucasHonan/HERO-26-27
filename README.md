@@ -1,4 +1,6 @@
-# HERO Rover Research & Decision Tracker
+# HERO-26-27
+
+## HERO Rover Research & Decision Tracker
 
 React + Vite + TypeScript app for the Campbell University HERO team to track NASA HERC 2026 rover research, engineering decisions, weighted decision matrices, requirements, test evidence, risks, traceability, and DRR/CDR export material.
 
