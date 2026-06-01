@@ -2,14 +2,15 @@ import { seedData } from "../data/seedData";
 import { AppData, SavedSnapshot } from "../types";
 import { isAppData, validateAppData } from "./validation";
 
-const STORAGE_KEY = "hero-rover-tracker:v6";
+const STORAGE_KEY = "hero-rover-tracker:v7";
 const LEGACY_STORAGE_KEY = "hero-rover-tracker";
-export const SCHEMA_VERSION = 6;
+export const SCHEMA_VERSION = 7;
 
 const stamp = () => new Date().toISOString();
 const sampleResearchIds = new Set(["research-pixhawk-6c-mini", "research-spark-max-can", "research-ros2-autonomy"]);
 const sampleDecisionIds = new Set(["decision-controller-architecture", "decision-motor-control"]);
 const sampleRequirementIds = new Set(["req-estop", "req-four-motors", "req-telemetry"]);
+const sampleTestIds = new Set(["test-rc-link", "test-slope-20"]);
 const sampleMatrixIds = new Set(["matrix-main-controller", "matrix-motor-communication", "matrix-coding-environment", "matrix-code-storage", "matrix-autonomy-framework", "matrix-steering-architecture", "matrix-power-distribution"]);
 
 const withSchema = (data: AppData): AppData => ({
@@ -18,6 +19,7 @@ const withSchema = (data: AppData): AppData => ({
   research: data.research.length === sampleResearchIds.size && data.research.every((entry) => sampleResearchIds.has(entry.id)) ? seedData.research : data.research,
   decisions: data.decisions.length === sampleDecisionIds.size && data.decisions.every((entry) => sampleDecisionIds.has(entry.id)) ? seedData.decisions : data.decisions,
   requirements: data.requirements.length === sampleRequirementIds.size && data.requirements.every((entry) => sampleRequirementIds.has(entry.id)) ? seedData.requirements : data.requirements,
+  tests: data.tests.length === sampleTestIds.size && data.tests.every((entry) => sampleTestIds.has(entry.id)) ? seedData.tests : data.tests,
   matrices: data.matrices.length === sampleMatrixIds.size && data.matrices.every((entry) => sampleMatrixIds.has(entry.id)) ? seedData.matrices : data.matrices,
   schemaVersion: SCHEMA_VERSION,
   snapshots: data.snapshots ?? [],
