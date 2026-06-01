@@ -8,16 +8,18 @@ import { Pill } from "../ui/Pill";
 
 export function DRRExportView({
   data,
+  revision,
   onSnapshot,
   onImport,
   importError,
 }: {
   data: AppData;
+  revision: number;
   onSnapshot: () => void;
   onImport: (text: string) => void;
   importError: string;
 }) {
-  const pkg = useMemo(() => buildExportPackage(data), [data]);
+  const pkg = useMemo(() => buildExportPackage(data), [data, revision]);
   const handleImport = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;

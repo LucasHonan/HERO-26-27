@@ -41,6 +41,7 @@ const textOf = (value: unknown): string => {
 
 function App() {
   const [data, setData] = useState<AppData>(() => loadAppData());
+  const [dataRevision, setDataRevision] = useState(0);
   const [page, setPage] = useState<PageId>("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeMatrixId, setActiveMatrixId] = useState(data.matrices[0]?.id ?? "");
@@ -84,7 +85,10 @@ function App() {
 
   const hasSearchOrFilters = search.trim() || Object.values(filters).some(Boolean);
 
-  const updateData = (updater: (current: AppData) => AppData) => setData((current) => updater(current));
+  const updateData = (updater: (current: AppData) => AppData) => {
+    setData((current) => updater(current));
+    setDataRevision((revision) => revision + 1);
+  };
   const navigate = (next: PageId) => {
     setPage(next);
     setSearch("");
@@ -149,7 +153,7 @@ function App() {
       case "traceability":
         return <TraceabilityPage data={traceabilityData} />;
       case "export":
-        return <DRRExportView data={data} onSnapshot={() => updateData(createSnapshot)} importError={importError} onImport={(text) => { const result = importBackupJson(text); if (result.error) setImportError(result.error); if (result.data) { setData(result.data); setImportError(""); } }} />;
+        return <DRRExportView data={data} revision={dataRevision} onSnapshot={() => updateData(createSnapshot)} importError={importError} onImport={(text) => { const result = importBackupJson(text); if (result.error) setImportError(result.error); if (result.data) { setData(result.data); setDataRevision((revision) => revision + 1); setImportError(""); } }} />;
       default:
         if (hasSearchOrFilters) return <SearchResults filtered={filtered} />;
         return <Dashboard data={data} onNavigate={navigate} />;
