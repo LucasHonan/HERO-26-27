@@ -85,6 +85,11 @@ function App() {
   const hasSearchOrFilters = search.trim() || Object.values(filters).some(Boolean);
 
   const updateData = (updater: (current: AppData) => AppData) => setData((current) => updater(current));
+  const navigate = (next: PageId) => {
+    setPage(next);
+    setSearch("");
+    setFilters(blankFilters);
+  };
 
   const saveEntity = () => {
     if (!editing) return;
@@ -147,13 +152,13 @@ function App() {
         return <DRRExportView data={data} onSnapshot={() => updateData(createSnapshot)} importError={importError} onImport={(text) => { const result = importBackupJson(text); if (result.error) setImportError(result.error); if (result.data) { setData(result.data); setImportError(""); } }} />;
       default:
         if (hasSearchOrFilters) return <SearchResults filtered={filtered} />;
-        return <Dashboard data={data} />;
+        return <Dashboard data={data} onNavigate={navigate} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Sidebar activePage={page} onNavigate={(next) => { setPage(next); setSearch(""); setFilters(blankFilters); }} mobileOpen={mobileOpen} onToggleMobile={() => setMobileOpen((open) => !open)} />
+      <Sidebar activePage={page} onNavigate={navigate} mobileOpen={mobileOpen} onToggleMobile={() => setMobileOpen((open) => !open)} />
       <main className="lg:pl-72">
         <div className="mx-auto max-w-7xl px-4 py-6 pt-20 lg:px-8 lg:pt-8">
           <div className="no-print mb-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
