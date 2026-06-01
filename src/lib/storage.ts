@@ -2,9 +2,9 @@ import { seedData } from "../data/seedData";
 import { AppData, SavedSnapshot } from "../types";
 import { isAppData, validateAppData } from "./validation";
 
-const STORAGE_KEY = "hero-rover-tracker:v8";
+const STORAGE_KEY = "hero-rover-tracker:v9";
 const LEGACY_STORAGE_KEY = "hero-rover-tracker";
-export const SCHEMA_VERSION = 8;
+export const SCHEMA_VERSION = 9;
 
 const stamp = () => new Date().toISOString();
 const sampleResearchIds = new Set(["research-pixhawk-6c-mini", "research-spark-max-can", "research-ros2-autonomy"]);
