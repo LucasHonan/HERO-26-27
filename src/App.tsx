@@ -30,6 +30,7 @@ interface FilteredData {
 }
 
 const blankFilters: FilterState = { subsystem: "", category: "", status: "", priority: "", owner: "", applicability: "" };
+const SIDEBAR_COLLAPSED_KEY = "hero-rover-tracker:sidebar-collapsed";
 const now = () => new Date().toISOString();
 const id = (prefix: string) => `${prefix}-${Date.now()}`;
 
@@ -44,6 +45,13 @@ function App() {
   const [dataRevision, setDataRevision] = useState(0);
   const [page, setPage] = useState<PageId>("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
   const [activeMatrixId, setActiveMatrixId] = useState(data.matrices[0]?.id ?? "");
   const [editing, setEditing] = useState<{ entity: EntityName; item: EditingEntity } | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -53,6 +61,13 @@ function App() {
   const [importError, setImportError] = useState("");
 
   useEffect(() => saveAppData(data), [data]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, sidebarCollapsed ? "1" : "0");
+    } catch {
+      // storage unavailable; collapse preference just won't persist
+    }
+  }, [sidebarCollapsed]);
 
   const options = useMemo(() => {
     const all = [...data.research, ...data.decisions, ...data.requirements, ...data.tests, ...data.risks];
@@ -162,8 +177,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <Sidebar activePage={page} onNavigate={navigate} mobileOpen={mobileOpen} onToggleMobile={() => setMobileOpen((open) => !open)} />
-      <main className="lg:pl-72">
+      <Sidebar
+        activePage={page}
+        onNavigate={navigate}
+        mobileOpen={mobileOpen}
+        onToggleMobile={() => setMobileOpen((open) => !open)}
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={() => setSidebarCollapsed((value) => !value)}
+      />
+      <main className={`transition-[padding] duration-200 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-72"}`}>
         <div className="mx-auto max-w-7xl px-4 py-6 pt-20 lg:px-8 lg:pt-8">
           <div className="no-print mb-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="grid gap-3 xl:grid-cols-[1fr_repeat(6,150px)_auto]">
