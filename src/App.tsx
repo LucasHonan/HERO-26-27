@@ -169,7 +169,7 @@ function App() {
             <div className="grid gap-3 xl:grid-cols-[1fr_repeat(6,150px)_auto]">
               <label className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input className="h-full min-h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={page === "dashboard" ? "Search across research, decisions, requirements, tests, risks, and matrices" : "Search this tab"} />
+                <input className="h-full min-h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" value={search} onChange={(event) => setSearch(event.target.value)} aria-label={page === "dashboard" ? "Search across research, decisions, requirements, tests, risks, and matrices" : "Search this tab"} />
               </label>
               <Field label="Subsystem" as="select" options={options.subsystem} value={filters.subsystem} onChange={(value) => setFilters({ ...filters, subsystem: value })} />
               <Field label="Category" as="select" options={options.category} value={filters.category} onChange={(value) => setFilters({ ...filters, category: value })} />
