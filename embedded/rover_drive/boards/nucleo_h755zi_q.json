@@ -1,0 +1,29 @@
+{
+  "build": {
+    "core": "stm32",
+    "cpu": "cortex-m7",
+    "extra_flags": "-DSTM32H7 -DSTM32H7xx -DSTM32H755xx -DCORE_CM7",
+    "f_cpu": "400000000L",
+    "mcu": "stm32h755zit6",
+    "product_line": "STM32H755xx"
+  },
+  "connectivity": ["can", "ethernet"],
+  "debug": {
+    "default_tools": ["stlink"],
+    "jlink_device": "STM32H755ZI_M7",
+    "onboard_tools": ["stlink"],
+    "openocd_board": "st_nucleo_h745zi",
+    "openocd_target": "stm32h7x_dual_bank",
+    "svd_path": "STM32H755_CM7.svd"
+  },
+  "frameworks": ["cmsis", "stm32cube"],
+  "name": "ST Nucleo H755ZI-Q (Cortex-M7)",
+  "upload": {
+    "maximum_ram_size": 524288,
+    "maximum_size": 1048576,
+    "protocol": "stlink",
+    "protocols": ["stlink", "jlink", "cmsis-dap", "mbed"]
+  },
+  "url": "https://www.st.com/en/evaluation-tools/nucleo-h755zi-q.html",
+  "vendor": "ST"
+}
